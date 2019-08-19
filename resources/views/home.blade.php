@@ -13,8 +13,21 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
-                    You are logged in!
+                    <div>
+                        You are logged in!
+                    </div>
+                    
+                    <div>
+                        <form role="form" class="form-group" style="margin-top: 20px">
+                            {{csrf_field()}}
+                            <div class="input-group">
+                              <input type="text" name="message" chat-box class="form-control" placeholder="Type...">
+                              <div class="input-group-prepend">
+                                <button type="submit" class="input-group-text">Send</button>
+                              </div>
+                            </div> 
+                          </form>
+                    </div>
                 </div>
             </div>
         </div>
