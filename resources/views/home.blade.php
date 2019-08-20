@@ -13,15 +13,28 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <div style="height:200px">
-                        You are logged in!
-                    </div>
+                    <div style="max-height:300px;height:300px;overflow-y: scroll;">
+                        @if (count($conversations) > 0)
+                        @foreach ($conversations as $c)
+                            <div class="card">
+                                <div class="card-body">
+                                <b>{{$c->user->name}}</b> <br>
+                                {{$c->message}}
+                                </div>
+                            </div><br>
+                            
+                        @endforeach
+                        @else 
+                            <p>No conversation so far. Start a conversation</p>
+                        @endif
+                                 </div>
                     
                     <div>
-                        <form role="form" class="form-group" style="margin-top: 20px">
+                        <form role="form" class="form-group" method="POST" action="{{action('MessagesController@store')}}" style="margin-top: 20px">
                             {{csrf_field()}}
+                            <!-- <input type="hidden" name="_method" value="PUT"> -->
                             <div class="input-group">
-                              <input type="text" name="message" chat-box class="form-control" placeholder="Type...">
+                              <input type="text" name="message" autocomplete="off" chat-box class="form-control" placeholder="Type...">
                               <div class="input-group-prepend">
                                 <button type="submit" class="input-group-text">Send</button>
                               </div>
