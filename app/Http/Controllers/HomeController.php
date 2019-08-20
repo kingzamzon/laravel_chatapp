@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\MessageComment;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $conversations = MessageComment::all();
+        
+        return view('home')->with('conversations', $conversations);
     }
 }
