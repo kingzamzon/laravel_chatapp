@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\User;
 use App\Message;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,5 +16,9 @@ class MessageComment extends Model
 
     public function message() {
         return $this->belongsTo(Message::class, 'message_id','id');
+    }
+
+     public function user() {
+        return $this->belongsTo(User::class, 'user_id','id');
     }
 }
