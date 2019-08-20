@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Message;
+use App\MessageComment;
 use Illuminate\Http\Request;
 
 class MessagesController extends Controller
@@ -34,7 +36,15 @@ class MessagesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $complain = new MessageComment;
+        $complain->user_id = auth()->user()->id;
+        $complain->message = $request->input('message');
+        $complain->message_id = 1;
+        $complain->save();
+
+        
+        return redirect('/home');
+        
     }
 
     /**
