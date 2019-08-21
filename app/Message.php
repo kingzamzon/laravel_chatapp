@@ -21,4 +21,12 @@ class Message extends Model
     public function messagecomments() {
         return $this->hasMany(MessageComment::class, 'id', 'message_id');
     }
+
+    public function usersender() {
+        return $this->belongsTo(User::class, 'sender_id','id');
+    }
+
+     public function userreceiver() {
+        return $this->belongsTo(User::class, 'receiver_id','id');
+    }
 }
