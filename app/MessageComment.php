@@ -15,7 +15,7 @@ class MessageComment extends Model
     protected $fillable = ['message_id','user_id','message'];
 
     public function message() {
-        return $this->belongsTo(Message::class, 'message_id','id');
+        return $this->belongsTo(Message::class, 'id','message_id');
     }
 
      public function user() {
