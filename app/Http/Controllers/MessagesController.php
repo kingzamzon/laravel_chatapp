@@ -55,7 +55,11 @@ class MessagesController extends Controller
      */
     public function show($id)
     {
-        //
+       $conversations =  MessageComment::where(['message_id'=>$id])->get();
+        $user_id = auth()->id();
+        $user_messages =  Message::whereSender_idOrReceiver_id($user_id, $user_id)->get();
+       return view('messages')->with('user_messages',$user_messages)->with('conversations', $conversations);
+
     }
 
     /**
