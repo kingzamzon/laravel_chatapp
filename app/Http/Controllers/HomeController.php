@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Message;
 use App\MessageComment;
 use Illuminate\Http\Request;
 
@@ -24,8 +25,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $conversations = MessageComment::all();
-        
-        return view('home')->with('conversations', $conversations);
+        $user_id = auth()->id();
+        $user_messages =  Message::whereSender_idOrReceiver_id($user_id, $user_id)->get();
+        return view('home')->with('user_messages',$user_messages);
     }
+
 }
