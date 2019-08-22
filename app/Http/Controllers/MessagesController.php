@@ -36,14 +36,14 @@ class MessagesController extends Controller
      */
     public function store(Request $request)
     {
-        $complain = new MessageComment;
-        $complain->user_id = auth()->user()->id;
-        $complain->message = $request->input('message');
-        $complain->message_id = 1;
-        $complain->save();
+        $conversation = new MessageComment;
+        $conversation->user_id = auth()->user()->id;
+        $conversation->message = $request->input('message');
+        $conversation->message_id = $request->input('message_id');
+        $conversation->save();
 
         
-        return redirect('/home');
+        return redirect()->route('messages.show', ['id' => $conversation->message_id]);
         
     }
 
@@ -58,7 +58,7 @@ class MessagesController extends Controller
        $conversations =  MessageComment::where(['message_id'=>$id])->get();
         $user_id = auth()->id();
         $user_messages =  Message::whereSender_idOrReceiver_id($user_id, $user_id)->get();
-       return view('messages')->with('user_messages',$user_messages)->with('conversations', $conversations);
+       return view('messages')->with('user_messages',$user_messages)->with('conversations', $conversations)->with('id', $id);
 
     }
 
