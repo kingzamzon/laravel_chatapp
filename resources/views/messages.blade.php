@@ -8,17 +8,18 @@
         </div> 
         <div class="col-md-8"> 
             <div class="card">
-                <div class="card-header">Chat</div>
-
+                <div class="card-header">Chat </div>
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
                     @endif
-                    <div style="max-height:300px;height:300px;overflow-y: scroll;">
-                        @if (count($conversations) > 0)
-                        @foreach ($conversations as $c)
+                    <div>
+                           @if (count($conversations) > 0)
+                        <div style="max-height:300px;height:300px;overflow-y: scroll;">
+                          
+                            @foreach ($conversations as $c)
                             <div class="card">
                                 <div class="card-body">
                                 <b>{{$c->user->name}}</b> <br>
@@ -27,14 +28,14 @@
                             </div><br>
                             
                         @endforeach
+                        </div>
                         @else 
                             <p>No conversation so far. Start a conversation</p>
                         @endif
                                  </div>
-                    
-                    <div>
-                        <form role="form" class="form-group" method="POST" action="{{action('MessagesController@store')}}" style="margin-top: 20px">
+                         <form role="form" class="form-group" method="POST" action="{{action('MessagesController@store')}}" style="margin-top: 20px">
                             {{csrf_field()}}
+                            <input type="hidden" name="message_id" value="{{$id}}">
                             <div class="input-group">
                               <input type="text" name="message" autocomplete="off" chat-box class="form-control" placeholder="Type...">
                               <div class="input-group-prepend">
@@ -42,7 +43,7 @@
                               </div>
                             </div> 
                           </form>
-                    </div>
+                  
                 </div>
             </div>
         </div>
