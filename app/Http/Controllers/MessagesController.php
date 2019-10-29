@@ -9,6 +9,16 @@ use Illuminate\Http\Request;
 class MessagesController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -41,9 +51,7 @@ class MessagesController extends Controller
         $conversation->message = $request->input('message');
         $conversation->message_id = $request->input('message_id');
         $conversation->save();
-
-        
-        return redirect()->route('messages.show', ['id' => $conversation->message_id]);
+        return redirect()->back();
         
     }
 
@@ -55,12 +63,19 @@ class MessagesController extends Controller
      */
     public function show($id)
     {
-       $conversations =  MessageComment::where(['message_id'=>$id])->get();
+       $conversations =  MessageComment::where(['message_id'=>1])->get();
         $user_id = auth()->id();
         $user_messages =  Message::whereSender_idOrReceiver_id($user_id, $user_id)->get();
-       return view('messages')->with('user_messages',$user_messages)->with('conversations', $conversations)->with('id', $id);
+       return view('messages', compact('user_messages', 'conversations','id' ));
 
     }
+
+     public function getConversations(Request $request)
+    {
+       $conversations =  MessageComment::where(['message_id'=>$request->id])->with('user')->get();
+        return $conversations;
+    }
+
 
     /**
      * Show the form for editing the specified resource.
