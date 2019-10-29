@@ -18,16 +18,10 @@
                     <div>
                            @if (count($conversations) > 0)
                         <div style="max-height:300px;height:300px;overflow-y: scroll;">
-                          
-                            @foreach ($conversations as $c)
-                            <div class="card">
-                                <div class="card-body">
-                                <b>{{$c->user->name}}</b> <br>
-                                {{$c->message}}
-                                </div>
-                            </div><br>
+                          <div chat-content id="ko">
+                                
+                            </div>
                             
-                        @endforeach
                         </div>
                         @else 
                             <p>No conversation so far. Start a conversation</p>
@@ -35,11 +29,11 @@
                                  </div>
                          <form role="form" class="form-group" method="POST" action="{{action('MessagesController@store')}}" style="margin-top: 20px">
                             {{csrf_field()}}
-                            <input type="hidden" name="message_id" value="{{$id}}">
+                            <input type="hidden" name="message_id" value="{{$id}}" >
                             <div class="input-group">
                               <input type="text" name="message" autocomplete="off" chat-box class="form-control" placeholder="Type...">
                               <div class="input-group-prepend">
-                                <button type="submit" class="input-group-text">Send</button>
+                                <button type="submit" class="input-group-text" id="btn">Send</button>
                               </div>
                             </div> 
                           </form>
@@ -48,5 +42,44 @@
             </div>
         </div>
     </div>
+    
 </div>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        setInterval(function() {
+            $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        })
+        var value = $('[name="message_id"]').val();
+        
+        $.ajax({
+            url: "{{ url('getConversations') }}",
+            method: "get",
+            data: {
+                id: value
+            },
+            success: function(data){
+                $('[chat-content]').html('');
+                $.each(data, function(i, v) {
+                    $('[chat-content]').append(`
+                        <div class="card">
+                        <div class="card-body" >
+                            <b>${v.user.name}</b> <br>
+                            ${v.message} <br>
+                            <i>${v.created_at}</i>
+                       </div>
+                       </div><br>
+                        `);
+                })
+            }
+        })
+        }, 100);
+        
+    })
+
+</script>
 @endsection
