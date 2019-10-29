@@ -15,6 +15,8 @@ Route::get('/', 'Auth\LoginController@showLoginForm');
 
 Route::resource('messages', 'MessagesController');
 
+Route::get('getConversations', 'MessagesController@getConversations')->name('getConversations');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
