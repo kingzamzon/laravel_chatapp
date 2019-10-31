@@ -48,10 +48,10 @@ class MessagesController extends Controller
     {
         $conversation = new MessageComment;
         $conversation->user_id = auth()->user()->id;
-        $conversation->message = $request->input('message');
-        $conversation->message_id = $request->input('message_id');
+        $conversation->message = $request->message;
+        $conversation->message_id = $request->message_id;
         $conversation->save();
-        return redirect()->back();
+        return response()->json($conversation);
         
     }
 
