@@ -13,9 +13,11 @@
 
 Route::get('/', 'Auth\LoginController@showLoginForm');
 
+// route used for chat
 Route::resource('messages', 'MessagesController');
-
+Route::post('storeConversations', 'MessagesController@store')->name('storeConversations');
 Route::get('getConversations', 'MessagesController@getConversations')->name('getConversations');
+// end of route
 
 Auth::routes();
 
