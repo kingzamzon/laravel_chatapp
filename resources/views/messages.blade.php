@@ -27,14 +27,15 @@
                             <p>No conversation so far. Start a conversation</p>
                         @endif
                                  </div>
-                         <form role="form" class="form-group" method="POST" action="{{action('MessagesController@store')}}" style="margin-top: 20px">
-                            {{csrf_field()}}
+                        <!-- method="POST" action="{{action('MessagesController@store')}}" -->
+                         <form id="myForm" class="form-group"  style="margin-top: 20px">
+                            <!-- {{csrf_field()}} -->
                             <input type="hidden" name="user_id" value="{{auth()->user()->id}}" >
                             <input type="hidden" name="message_id" value="{{$id}}" >
                             <div class="input-group">
                               <input type="text" name="message" autocomplete="off" chat-box class="form-control" placeholder="Type...">
                               <div class="input-group-prepend">
-                                <button type="submit" class="input-group-text" id="btn">Send</button>
+                                <button class="input-group-text" id="ajaxSubmit">Send</button>
                               </div>
                             </div> 
                           </form>
@@ -49,10 +50,34 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        $('#ajaxSubmit').click(function(e) {
+            e.preventDefault();
+            $.ajaxSetup({
+             headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              }
+            })
+            $.ajax({
+                url: "{{ url('storeConversations') }}",
+                method: 'post',
+                data: {
+                    message_id: $('[name="message_id"]').val(),
+                    message: $('[name="message"]').val()
+                },
+                success: function(result) {
+                    // what should happen when success
+                    $('[name="message"]').val('');
+                    // console.log(result);
+                }
+            })
+        })
+
+
+
         setInterval(function() {
             $.ajaxSetup({
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         })
         var value = $('[name="message_id"]').val();
@@ -80,7 +105,12 @@
             }
         })
         }, 100);
+      
+
         
+
+
+
     })
 
 </script>
