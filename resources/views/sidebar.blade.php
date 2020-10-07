@@ -7,12 +7,12 @@
                 @if($single_message->receiver_id == Auth::user()->id)
                     <!-- <p>You are a receiver</p> -->
                     <h3><a href="/messages/{{$single_message->id}}">
-                        {{$single_message->usersender->name}}
+                        {{$single_message->name}}
                     </a></h3>
                 @else
                     <!-- <p>You are a sender </p> -->
                     <h3><a href="/messages/{{$single_message->id}}">
-                        {{$single_message->userreceiver->name}}
+                        {{$single_message->name}}
                     </a></h3>
                 @endif
             @endforeach

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Message;
 use App\MessageComment;
 use Illuminate\Http\Request;
@@ -16,26 +17,6 @@ class MessagesController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -61,12 +42,35 @@ class MessagesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($user)
     {
-       $conversations =  MessageComment::where(['message_id'=>1])->get();
-        $user_id = auth()->id();
-        $user_messages =  Message::whereSender_idOrReceiver_id($user_id, $user_id)->get();
-       return view('messages', compact('user_messages', 'conversations','id' ));
+        $auth_user = auth()->user()->id;
+
+        // check if user and auth already have a message if not create
+        if(Message::where(['sender_id'=> $auth_user, 'receiver_id'=> $user])->first()){
+
+            $message_info = Message::where(['sender_id'=> $auth_user, 'receiver_id'=> $user])->first();
+
+        }else if(Message::where(['sender_id'=> $user, 'receiver_id'=> $auth_user])->first()){
+
+            $message_info = Message::where(['sender_id'=> $user, 'receiver_id'=> $auth_user])->first();
+        }
+        else {
+            $message_info = Message::create(
+                [
+                'sender_id' => auth()->user()->id,
+                'receiver_id' => $user
+                ]
+            );
+        }
+
+        $user_messages = User::where('id','!=',auth()->user()->id)->get();
+        
+        $user = User::where('id', $user)->first();
+
+        $conversations =  MessageComment::where(['message_id'=> $message_info->id])->get();
+
+       return view('messages', compact('user_messages', 'conversations', 'message_info' ));
 
     }
 

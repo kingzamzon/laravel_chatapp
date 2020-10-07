@@ -16,26 +16,23 @@
                         </div>
                     @endif
                     <div>
-                           @if (count($conversations) > 0)
-                        <div style="max-height:300px;height:300px;overflow-y: scroll;">
-                          <div chat-content id="ko">
+                        @if (count($conversations) > 0)
+                            <div style="max-height:300px;height:300px;overflow-y: scroll;">
+                            <div chat-content id="ko">
+                                    
+                                </div>
                                 
                             </div>
-                            
-                        </div>
                         @else 
                             <p>No conversation so far. Start a conversation</p>
                         @endif
                                  </div>
-                        <!-- method="POST" action="{{action('MessagesController@store')}}" -->
                          <form id="myForm" class="form-group"  style="margin-top: 20px">
-                            <!-- {{csrf_field()}} -->
-                            <input type="hidden" name="user_id" value="{{auth()->user()->id}}" >
-                            <input type="hidden" name="message_id" value="{{$id}}" >
+                            <input type="hidden" name="message_id" value="{{$message_info->id}}" >
                             <div class="input-group">
                               <input type="text" name="message" autocomplete="off" chat-box class="form-control" placeholder="Type...">
                               <div class="input-group-prepend">
-                                <button class="input-group-text" id="ajaxSubmit">Send</button>
+                                <button class="input-group-text" id="submitMessage">Send</button>
                               </div>
                             </div> 
                           </form>
@@ -50,7 +47,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#ajaxSubmit').click(function(e) {
+        $('#submitMessage').click(function(e) {
             e.preventDefault();
             $.ajaxSetup({
              headers: {
@@ -81,7 +78,7 @@
             }
         })
         var value = $('[name="message_id"]').val();
-        var user = $('[name="user_id"]').val();
+        var user = "{{Auth::user()->id}}";
         $.ajax({
             url: "{{ url('getConversations') }}",
             method: "get",
@@ -97,14 +94,14 @@
                         <div class="card-body ${(v.user_id == user) ? 'text-right' : '' }" >
                             <b>${v.user.name}</b> <br>
                             ${v.message} <br>
-                            <i>${v.created_at}</i>
+                            <i>${ new Date(v.created_at) }</i>
                        </div>
                        </div><br>
                         `);
                 })
             }
         })
-        }, 100);
+        }, 1000);
       
 
         
